@@ -214,29 +214,34 @@
 						<!-- Cart Section -->
 
 						<div
-							class="cart h-full md:col-start-2 md:col-span-3 lg:col-start-5 lg:col-span-1"
+							class="cart h-[37.5rem] md:col-start-2 md:col-span-3 lg:col-start-5 lg:col-span-1"
 						>
 							<div
 								id="cart"
-								class="bg-white w-full lg:h-full p-4 flex flex-col gap-2 rounded-lg text-left"
+								class="bg-white w-full lg:h-full p-4 flex flex-col gap-2 rounded-lg text-left overflow-y-auto"
 							>
 								<h2 class="text-xl font-semibold">Your Cart</h2>
-								<div
-									id="cartCard"
-									class="cart-item bg-[#F0FDF4] flex justify-between items-center px-3 py-2 rounded-lg"
-								>
-									<div class="w-full flex flex-col gap-1 rounded-lg text-left">
-										<h3 class="font-semibold text-sm">Mango Tree</h3>
-										<p class="text-[#1F293780]">
-											<span
-												><i class="fa-solid fa-bangladeshi-taka-sign"></i
-											></span>
-											500 X 1
-										</p>
+								<div id="cartCard" class="flex flex-col gap-2">
+									<div
+										class="cart-item bg-[#F0FDF4] flex justify-between items-center px-3 py-2 rounded-lg hidden"
+									>
+										<div
+											id="placeholder-cart-item"
+											class="w-full flex flex-col gap-1 rounded-lg text-left"
+										>
+											<h3 class="font-semibold text-sm">Mango Tree</h3>
+											<p class="text-[#1F293780]">
+												<span
+													><i class="fa-solid fa-bangladeshi-taka-sign"></i
+												></span>
+												<span id="price">500</span> X
+												<span id="quantity">1</span>
+											</p>
+										</div>
+										<span id="remove-item" class="text-3xl text-[#1F293780]"
+											><i class="fa-solid fa-xmark"></i
+										></span>
 									</div>
-									<span id="remove-item" class="text-3xl text-[#1F293780]"
-										><i class="fa-solid fa-xmark"></i
-									></span>
 								</div>
 								<hr class="w-full border-0.5 border-gray-300" />
 								<div class="flex justify-between">
@@ -245,7 +250,7 @@
 										<span
 											><i class="fa-solid fa-bangladeshi-taka-sign"></i
 										></span>
-										500
+										<span id="totalCost">0</span>
 									</p>
 								</div>
 							</div>

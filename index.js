@@ -315,7 +315,7 @@ document.getElementById("card").addEventListener("click", async (e) => {
 	}
 	const addItemId = e.target.id.replace("cart-btn-", "");
 
-	const tree = async (id) => {
+	const treeDetail = async (id) => {
 		try {
 			const url = `https://openapi.programming-hero.com/api/plant/${id}`;
 			const res = await fetch(url);
@@ -329,31 +329,107 @@ document.getElementById("card").addEventListener("click", async (e) => {
 
 	// This whole event must be an asynchronus one and the returned value from an API must be awaited inside an async function unlike other cases
 
-	const treeDetail = await tree(addItemId);
+	const tree = await treeDetail(addItemId);
 
-	console.log(treeDetail);
+	// console.log(treeDetail);
 
-	addToCart(treeDetail);
+	const existingTree = existing(tree);
+	console.log(existingTree);
+
+	if (existingTree) {
+		updateCart(tree, existingTree);
+	} else {
+		addToCart(tree);
+		updateCart(tree, existingTree);
+	}
 
 	// console.log(addItemId);
 });
 
 function addToCart(tree) {
-	const cartCard = document.getElementById("cart");
-
-	let existingItem = document.getElementById(`cart-item-${tree.id}`);
+	console.log(existing(tree));
+	const cartCard = document.getElementById("cartCard");
 
 	const newAddItem = document.createElement("div");
-	newAddItem.innerHTML = ``;
+	newAddItem.innerHTML = `<div
+								class="cart-item bg-[#F0FDF4] flex justify-between items-center px-3 py-2 rounded-lg"
+								>
+                                    <div id="cart-item-${tree.id}" class="w-full flex flex-col gap-1 rounded-lg text-left">
+										<h3 class="font-semibold text-sm">${tree.name}</h3>
+										<p class="text-[#1F293780]">
+											<span
+												><i class="fa-solid fa-bangladeshi-taka-sign"></i
+											></span>
+											<span id="price-${tree.id}">${tree.price}</span> X <span id="quantity-${tree.id}">1</span>
+										</p>
+									</div>
+                                    <span id="remove-item" class="text-3xl text-[#1F293780]">
+                                    <i class="fa-solid fa-xmark"></i>
+                                    </span>
+                                </div>`;
 
 	cartCard.append(newAddItem);
-	const itemExists = document.getElementById(`cart-item-${tree.id}`);
-	const timesAdded = document.getElementById(`timesAdded-${tree.id}`).innerText[
-		-1
-	];
-	console.log(timesAdded);
+	// addTotal(tree);
+}
 
-	if (itemExists.id === tree.id) {
-		timesAdded++;
+function addTotal(tree) {
+	// const currentItem = document.getElementById(`cart-item-${tree.id}`);
+	// console.log([...existing]);
+	// const priceEl = document.getElementById(`price-${tree.id}`);
+	// const quantityEl = document.getElementById(`quantity-${tree.id}`);
+	// const totalEl = document.getElementById("totalCost");
+	// console.log(priceEl, quantityEl, totalEl);
+	// let price = parseInt(priceEl.innerText);
+	// let quantity = parseInt(quantityEl.innerText);
+	// let total = parseInt(totalEl.innerText);
+	// if (existingItem) {
+	// 	quantity++;
+	// 	const subTotal = price * quantity;
+	// 	total = total + subTotal;
+	// 	totalEl.innerText = total;
+	// 	console.log(total);
+	// }
+}
+
+//Checks if the tree exists or not
+
+function existing(tree) {
+	const existingCartItems = document.querySelectorAll("#cartCard .cart-item");
+	for (child of existingCartItems) {
+		const exists = child.querySelector(`#cart-item-${tree.id}`);
+
+		if (exists) {
+			// console.log(exists.id);
+			return true;
+		}
+
+		// const allCartIds = child.querySelector(`div`).id;
+		// console.log(allCartIds);
 	}
+	return false;
+}
+
+function updateCart(tree, existingItem) {
+	const priceEl = document.getElementById(`price-${tree.id}`);
+
+	const quantityEl = document.getElementById(`quantity-${tree.id}`);
+
+	const totalEl = document.getElementById("totalCost");
+
+	console.log(priceEl, quantityEl, totalEl);
+
+	let price = parseInt(priceEl.innerText);
+	let quantity = parseInt(quantityEl.innerText);
+	let total = parseInt(totalEl.innerText);
+
+	total = total + price;
+
+	if (existingItem) {
+		quantity++;
+		quantityEl.innerText = quantity;
+	}
+
+	totalEl.innerText = total;
+
+	console.log(total);
 }
