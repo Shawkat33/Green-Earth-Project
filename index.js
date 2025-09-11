@@ -8,6 +8,19 @@ const manageCategorySpinner = (status) => {
 	}
 };
 
+const manageCardSpinner = (status) => {
+	const spinnerCard = document.getElementById("spinnerCard");
+	const cardContainer = document.getElementById("card");
+
+	if (status === true) {
+		spinnerCard.classList.remove("hidden");
+		cardContainer.classList.add("hidden");
+	} else {
+		spinnerCard.classList.add("hidden");
+		cardContainer.classList.remove("hidden");
+	}
+};
+
 const loadCategories = async () => {
 	manageCategorySpinner(true);
 	try {
@@ -79,7 +92,7 @@ document.getElementById("category").addEventListener("click", (e) => {
 
 	const categoryId = clickedCategory.id.replace("category-id-", "");
 
-	console.log(categoryId);
+	// console.log(categoryId);
 
 	const categoryListItem = document.getElementById(clickedCategory.id);
 
@@ -143,7 +156,7 @@ const displayAllTrees = (trees) => {
 								<div
 									class="product-detail flex flex-col gap-2 text-left w-full"
 								>
-									<h3 class="text-xl font-semibold">${tree.name}</h3>
+									<h3 onclick="loadTreeDetails(${tree.id})" class="text-xl font-semibold hover:cursor-pointer">${tree.name}</h3>
 									<p class="text-[#1F2937CC] text-xs overflow-y-scroll max-h-10">
 										${tree.description}
 									</p>
@@ -162,7 +175,7 @@ const displayAllTrees = (trees) => {
 								</div>
 
 								<button
-									id="add-cart-btn"
+									id="cart-btn-${tree.id}"
 									class="w-full rounded-full content-center px-5 py-3 bg-[#15803D] active:bg-green-800 text-white font-medium hover:cursor-pointer"
 								>
 									Add to Cart
@@ -220,7 +233,7 @@ const displayCategoricalTrees = (trees) => {
 								<div
 									class="product-detail flex flex-col gap-2 text-left w-full"
 								>
-									<h3 class="text-xl font-semibold">${tree.name}</h3>
+									<h3 onclick="loadTreeDetails(${tree.id})" class="text-xl font-semibold hover:cursor-pointer">${tree.name}</h3>
 									<p class="text-[#1F2937CC] text-xs overflow-y-scroll max-h-10">
 										${tree.description}
 									</p>
@@ -239,7 +252,7 @@ const displayCategoricalTrees = (trees) => {
 								</div>
 
 								<button
-									id="add-cart-btn"
+									id="cart-btn-${tree.id}"
 									class="w-full rounded-full content-center px-5 py-3 bg-[#15803D] active:bg-green-800 text-white font-medium hover:cursor-pointer"
 								>
 									Add to Cart
@@ -249,15 +262,98 @@ const displayCategoricalTrees = (trees) => {
 	});
 };
 
-const manageCardSpinner = (status) => {
-	const spinnerCard = document.getElementById("spinnerCard");
-	const cardContainer = document.getElementById("card");
+// Tree Detail Modal
 
-	if (status === true) {
-		spinnerCard.classList.remove("hidden");
-		cardContainer.classList.add("hidden");
-	} else {
-		spinnerCard.classList.add("hidden");
-		cardContainer.classList.remove("hidden");
+const loadTreeDetails = async (id) => {
+	try {
+		const url = `https://openapi.programming-hero.com/api/plant/${id}`;
+		const res = await fetch(url);
+		const json = await res.json();
+		const details = json.plants;
+
+		displayTreeDetails(details);
+	} catch (error) {
+		console.error(error);
 	}
 };
+
+const displayTreeDetails = (tree) => {
+	// console.log(tree);
+
+	const modalWindow = document.getElementById("treeDetails");
+	modalWindow.innerHTML = "";
+	const treeDetail = document.createElement("div");
+	treeDetail.classList.add("space-y-2");
+	treeDetail.innerHTML = `<h2 class="text-2xl font-bold">${tree.name}</h2>
+
+								<img
+									class="aspect-square w-full object-cover my-3 rounded-xl"
+									src="${tree.image}"
+									alt=""
+								/>
+
+								<p class="text-sm">
+									<span class="font-semibold">Category: </span>${tree.category}
+								</p>
+								<p class="text-sm">
+									<span class="font-semibold">Description: </span>${tree.description}
+								</p>
+								<p class="text-sm">
+									<span class="font-semibold">Price: </span
+									><i class="fa-solid fa-bangladeshi-taka-sign"></i> ${tree.price}
+								</p>`;
+
+	modalWindow.append(treeDetail);
+	document.getElementById("my_modal_5").showModal();
+};
+
+// Add to Cart
+
+document.getElementById("card").addEventListener("click", async (e) => {
+	if (e.target.tagName !== "BUTTON") {
+		return;
+	}
+	const addItemId = e.target.id.replace("cart-btn-", "");
+
+	const tree = async (id) => {
+		try {
+			const url = `https://openapi.programming-hero.com/api/plant/${id}`;
+			const res = await fetch(url);
+			const json = await res.json();
+			const data = json.plants;
+			return data;
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	// This whole event must be an asynchronus one and the returned value from an API must be awaited inside an async function unlike other cases
+
+	const treeDetail = await tree(addItemId);
+
+	console.log(treeDetail);
+
+	addToCart(treeDetail);
+
+	// console.log(addItemId);
+});
+
+function addToCart(tree) {
+	const cartCard = document.getElementById("cart");
+
+	let existingItem = document.getElementById(`cart-item-${tree.id}`);
+
+	const newAddItem = document.createElement("div");
+	newAddItem.innerHTML = ``;
+
+	cartCard.append(newAddItem);
+	const itemExists = document.getElementById(`cart-item-${tree.id}`);
+	const timesAdded = document.getElementById(`timesAdded-${tree.id}`).innerText[
+		-1
+	];
+	console.log(timesAdded);
+
+	if (itemExists.id === tree.id) {
+		timesAdded++;
+	}
+}

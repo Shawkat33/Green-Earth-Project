@@ -222,6 +222,7 @@
 							>
 								<h2 class="text-xl font-semibold">Your Cart</h2>
 								<div
+									id="cartCard"
 									class="cart-item bg-[#F0FDF4] flex justify-between items-center px-3 py-2 rounded-lg"
 								>
 									<div class="w-full flex flex-col gap-1 rounded-lg text-left">
@@ -251,7 +252,45 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Modal Here -->
+
+				<dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+					<div class="modal-box">
+						<div id="treeDetails" class="text-left">
+							<div class="hidden">
+								<h2 class="text-2xl font-bold">Aam Gach</h2>
+
+								<img
+									class="aspect-square w-full object-cover"
+									src="assets/about.png"
+									alt=""
+								/>
+
+								<p class="text-sm">
+									<span class="font-semibold">Category: </span>Boro Gach
+								</p>
+								<p class="text-sm">
+									<span class="font-semibold">Description: </span>Lorem ipsum
+									dolor sit amet consectetur adipisicing elit. Fugiat, tenetur!
+								</p>
+								<p class="text-sm">
+									<span class="font-semibold">Price: </span
+									><i class="fa-solid fa-bangladeshi-taka-sign"></i> Onek Taka
+								</p>
+							</div>
+						</div>
+						<div class="modal-action">
+							<form method="dialog">
+								<!-- if there is a button in form, it will close the modal -->
+								<button class="btn">Close</button>
+							</form>
+						</div>
+					</div>
+				</dialog>
+
 				<!-- About Section -->
+
 				<div class="py-24">
 					<h2 class="text-3xl font-semibold">About the Campaign</h2>
 					<div
@@ -277,7 +316,9 @@
 					</div>
 				</div>
 			</div>
+
 			<!-- Impact Section -->
+
 			<div
 				class="px-5 md:px-12 lg:px-16 xl:px-24 2xl:px-32 text-center py-24 bg-[#CFF0DC]"
 			>
@@ -298,7 +339,9 @@
 					</div>
 				</div>
 			</div>
+
 			<!-- Plant a tree Section -->
+
 			<div
 				class="px-5 md:px-12 lg:px-16 xl:px-24 2xl:px-32 text-center py-24 bg-[#166534]"
 			>
@@ -340,7 +383,9 @@
 					>
 				</div>
 			</div>
+
 			<!-- Footer Section -->
+
 			<div class="h-[4.5rem] flex justify-center items-center bg-[#14532D]">
 				<p class="text-white">© 2025 Green Earth. All Rights Reserved.</p>
 			</div>
