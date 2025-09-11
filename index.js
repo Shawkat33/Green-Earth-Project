@@ -262,7 +262,7 @@ const displayCategoricalTrees = (trees) => {
 	});
 };
 
-// Tree Detail Modal
+// Tree Detail Modal data loading from API
 
 const loadTreeDetails = async (id) => {
 	try {
@@ -276,6 +276,8 @@ const loadTreeDetails = async (id) => {
 		console.error(error);
 	}
 };
+
+// Tree Detail Modal display items
 
 const displayTreeDetails = (tree) => {
 	// console.log(tree);
@@ -307,7 +309,7 @@ const displayTreeDetails = (tree) => {
 	document.getElementById("my_modal_5").showModal();
 };
 
-// Add to Cart
+// Add to Cart Feature
 
 document.getElementById("card").addEventListener("click", async (e) => {
 	if (e.target.tagName !== "BUTTON") {
@@ -334,7 +336,7 @@ document.getElementById("card").addEventListener("click", async (e) => {
 	// console.log(treeDetail);
 
 	const existingTree = existing(tree);
-	console.log(existingTree);
+	// console.log(existingTree);
 
 	if (existingTree) {
 		updateCart(tree, existingTree);
@@ -346,13 +348,16 @@ document.getElementById("card").addEventListener("click", async (e) => {
 	// console.log(addItemId);
 });
 
+// Add Item cards to Cart
+
 function addToCart(tree) {
-	console.log(existing(tree));
-	const cartCard = document.getElementById("cartCard");
+	// console.log(existing(tree));
+	const cartCards = document.getElementById("cartCards");
 
 	const newAddItem = document.createElement("div");
 	newAddItem.innerHTML = `<div
-								class="cart-item bg-[#F0FDF4] flex justify-between items-center px-3 py-2 rounded-lg"
+								id="cart-card-${tree.id}"
+								class="cart-item bg-[#F0FDF4] flex justify-between items-center px-3 py-2 rounded-lg my-2"
 								>
                                     <div id="cart-item-${tree.id}" class="w-full flex flex-col gap-1 rounded-lg text-left">
 										<h3 class="font-semibold text-sm">${tree.name}</h3>
@@ -368,33 +373,13 @@ function addToCart(tree) {
                                     </span>
                                 </div>`;
 
-	cartCard.append(newAddItem);
-	// addTotal(tree);
-}
-
-function addTotal(tree) {
-	// const currentItem = document.getElementById(`cart-item-${tree.id}`);
-	// console.log([...existing]);
-	// const priceEl = document.getElementById(`price-${tree.id}`);
-	// const quantityEl = document.getElementById(`quantity-${tree.id}`);
-	// const totalEl = document.getElementById("totalCost");
-	// console.log(priceEl, quantityEl, totalEl);
-	// let price = parseInt(priceEl.innerText);
-	// let quantity = parseInt(quantityEl.innerText);
-	// let total = parseInt(totalEl.innerText);
-	// if (existingItem) {
-	// 	quantity++;
-	// 	const subTotal = price * quantity;
-	// 	total = total + subTotal;
-	// 	totalEl.innerText = total;
-	// 	console.log(total);
-	// }
+	cartCards.append(newAddItem);
 }
 
 //Checks if the tree exists or not
 
 function existing(tree) {
-	const existingCartItems = document.querySelectorAll("#cartCard .cart-item");
+	const existingCartItems = document.querySelectorAll("#cartCards .cart-item");
 	for (child of existingCartItems) {
 		const exists = child.querySelector(`#cart-item-${tree.id}`);
 
@@ -409,6 +394,8 @@ function existing(tree) {
 	return false;
 }
 
+//Update Cart, total price and quantity
+
 function updateCart(tree, existingItem) {
 	const priceEl = document.getElementById(`price-${tree.id}`);
 
@@ -416,7 +403,7 @@ function updateCart(tree, existingItem) {
 
 	const totalEl = document.getElementById("totalCost");
 
-	console.log(priceEl, quantityEl, totalEl);
+	// console.log(priceEl, quantityEl, totalEl);
 
 	let price = parseInt(priceEl.innerText);
 	let quantity = parseInt(quantityEl.innerText);
@@ -431,5 +418,48 @@ function updateCart(tree, existingItem) {
 
 	totalEl.innerText = total;
 
-	console.log(total);
+	// console.log(total);
+}
+
+document.getElementById("cart").addEventListener("click", (e) => {
+	const removeElClicked = e.target;
+
+	if (!removeElClicked.id === "remove-item") {
+		return;
+	}
+
+	// console.log(removeElClicked);
+
+	const removeItemReqId = e.target.closest('[id^="cart-card-"]').id;
+	const removeItemIdNo = removeItemReqId.replace("cart-card-", "");
+	// console.log(ItemIdNo);
+
+	// console.log(removeItemReqId);
+
+	removefromCart(removeItemIdNo);
+	//Remove element after calculation, otherwise, error monster will catch you
+	document.getElementById(removeItemReqId).remove();
+});
+
+//Can also be used, but I don't like it, not scalable and easy to delegate or whatever
+// function removeItem(e) {
+// 	console.log(e);
+// }
+
+function removefromCart(id) {
+	const priceEl = document.getElementById(`price-${id}`);
+
+	const quantityEl = document.getElementById(`quantity-${id}`);
+
+	const totalEl = document.getElementById("totalCost");
+
+	// console.log(priceEl, quantityEl, totalEl);
+
+	let price = parseInt(priceEl.innerText);
+	let quantity = parseInt(quantityEl.innerText);
+	let total = parseInt(totalEl.innerText);
+
+	total = total - price * quantity;
+
+	totalEl.innerText = total;
 }
